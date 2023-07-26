@@ -1,19 +1,23 @@
+import loginPage from "../../POM/loginPage"
+const inputan = require('../../fixtures/saucedemo/data.json')
+
 describe('Login scenario', () => {
+  const LoginPage = new loginPage()
   beforeEach(() => {
-    cy.visit('https://www.saucedemo.com/')
+    cy.visit(LoginPage.url)
   })
   it('Success Login', () => {
-    cy.get('#user-name').type('standard_user')
-    cy.get('[data-test="password"]').type('secret_sauce')
-    cy.get('[data-test="login-button"]').click()
-    cy.get('.app_logo').should('be.visible')
-    cy.get('.title').should('be.visible')
-    cy.url().should('eq', 'https://www.saucedemo.com/inventory.html')
+    cy.get(LoginPage.username).type(inputan.valid_user)
+    cy.get(LoginPage.password).type(inputan.valid_pass)
+    cy.get(LoginPage.loginBTN).click()
+    cy.get(LoginPage.logo).should(LoginPage.visible)
+    cy.get(LoginPage.title).should(LoginPage.visible)
+    cy.url().should(LoginPage.equal, LoginPage.urlInventory)
   })
   it('Failed Login', () => {
-    cy.get('#user-name').type('salahuser')
-    cy.get('[data-test="password"]').type('salahpass')
-    cy.get('[data-test="login-button"]').click()
-    cy.get('[data-test="error"]').should('be.visible')
+    LoginPage.inputWrongUserName()
+    LoginPage.inputWrongPassword()
+    LoginPage.buttonLoginClick()
+    LoginPage.messageError()
   })
 })
